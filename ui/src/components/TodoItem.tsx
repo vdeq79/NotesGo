@@ -66,7 +66,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                 >
 
                     <Text
-                        color={todo.completed ? "green.200" : "yellow.100"}
+                        color={todo.completed ? "green.200" : "yellow.200"}
                         textDecoration={todo.completed ? "line-through" : "none"}
                     >
                         {todo.body}
