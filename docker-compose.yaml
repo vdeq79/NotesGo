@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend-builder
+    volumes:
+      - ./ui:/app/ui
+      - /app/ui/node_modules # Prevents overwriting node_modules
+    ports:
+      - "5173:5173"
+    command: npm run dev --host
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Enables polling for file changes
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend-builder
+    volumes:
+      - .:/app/backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/mydatabase
+    command: go run main.go
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

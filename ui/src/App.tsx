@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar"
 import TodoList from "./components/TodoList";
 import { useColorModeValue } from "./components/ui/color-mode";
 
-export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:4000/api" : "/api";
+export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api" : "/api";
 
 function App() {
 

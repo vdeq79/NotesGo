@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 type Todo struct {
@@ -17,6 +18,11 @@ func main() {
 	fmt.Println("Hello, World!")
 
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
+	}))
 
 	todos := []Todo{
 		{Id: 1, Completed: false, Body: "Learn Go"},
@@ -36,6 +42,6 @@ func main() {
 		return c.Status(200).JSON(fiber.Map{"todos": todos})
 	})
 
-	// Start the server on port 4000
-	log.Fatal(app.Listen(":4000"))
+	// Start the server on port 8080
+	log.Fatal(app.Listen(":8080"))
 }

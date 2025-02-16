@@ -1,40 +1,36 @@
 # Node.js dependencies
-*/node_modules
+ui/node_modules
 
 # Build outputs
-*/build
+ui/build
 
 # Logs
 *.log
-*/logs
+ui/logs
+backend/logs
 
 # Temporary files
 *.tmp
 *.swp
-*.out
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
 # Go build outputs
-*/bin
-*/server
-go.work
-go.work.sum
+backend/bin
+backend/server
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yaml
 
 # IDE and editor files
 .vscode
 .idea
 *.sublime-project
 *.sublime-workspace
-
-# Test outputs
-*/coverage
-
-# Environment files
-.env
-
-# Miscellaneous
-*.bak   
-*.old
