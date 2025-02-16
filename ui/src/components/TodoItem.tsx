@@ -1,7 +1,6 @@
 import { Badge,  Box,  Flex,  Text } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
 
-
 export type Todo = {
 	id: number;
 	body: string;

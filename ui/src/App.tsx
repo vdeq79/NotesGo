@@ -1,7 +1,6 @@
 import { Container, Stack, Theme } from "@chakra-ui/react"
-import Navbar from "./components/Navbar"
 import TodoList from "./components/TodoList";
-import { useColorModeValue } from "./components/ui/color-mode";
+import EnhancedNavbar from "./components/EnhancedNavbar";
 
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api" : "/api";
 
@@ -9,9 +8,9 @@ function App() {
 
   return (
     <>
-      <Theme background={useColorModeValue("pink.50", "blue.900")}>
+      <Theme>
         <Stack h="100vh">
-          <Navbar />
+          <EnhancedNavbar />
           <Container>
             <TodoList />
           </Container>
