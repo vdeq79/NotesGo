@@ -3,6 +3,7 @@ import { Container, Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import TodoItem, { Todo } from "./TodoItem";
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "../App";
+import CreateTodoButton from "./CreateTodoButton";
 
 
 const TodoList = () => {
@@ -38,6 +39,9 @@ const TodoList = () => {
 			>
 				Today's Tasks
 			</Text>
+			<Flex justifyContent={"right"} my={4}>
+            	<CreateTodoButton />
+			</Flex>
             <Container maxW={"900px"}>
                 {isLoading && (
                     <Flex justifyContent={"center"} my={4}>

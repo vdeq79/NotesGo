@@ -27,9 +27,7 @@ func main() {
 
 	fmt.Println("Connected to database")
 
-	//db.AutoMigrate(&Todo{})
-
-	fmt.Println("Database migrated")
+	db.AutoMigrate(&Todo{})
 
 	app := fiber.New()
 
@@ -46,7 +44,7 @@ func main() {
 
 	app.Get("/api/todos", func(c fiber.Ctx) error {
 		var todos []Todo
-		result := db.Find(&todos).Order("Id ASC")
+		result := db.Order("Id").Find(&todos)
 		if result.Error != nil {
 			log.Fatalf("Error fetching todos: %v", result.Error)
 		}
@@ -56,12 +54,10 @@ func main() {
 	})
 
 	app.Post("/api/todos", func(c fiber.Ctx) error {
-		var todo Todo
-		if err := c.Bind().Body(todo); err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
-		}
+		body := string(c.Body())
 
-		result := db.Create(&todo)
+		result := db.Create(&Todo{Body: body})
+
 		if result.Error != nil {
 			return c.Status(500).JSON(fiber.Map{"error": result.Error.Error()})
 		}
