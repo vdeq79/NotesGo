@@ -3,6 +3,7 @@ import { useColorModeValue } from "./ui/color-mode";
 import { BASE_URL } from "../App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
+import { FaCheckCircle } from "react-icons/fa";
 
 export type Todo = {
 	id: number;
@@ -13,12 +14,12 @@ export type Todo = {
 const TodoItem = ({ todo }: { todo: Todo }) => {
 	const queryClient = useQueryClient();
 
-	/*const { mutate: updateTodo, isPending: isUpdating } = useMutation({
+	const { mutate: updateTodo, isPending: isUpdating } = useMutation({
 		mutationKey: ["updateTodo"],
 		mutationFn: async () => {
 			if (todo.completed) return alert("Todo is already completed");
 			try {
-				const res = await fetch(BASE_URL + `/todos/${todo._id}`, {
+				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
 					method: "PATCH",
 				});
 				const data = await res.json();
@@ -33,7 +34,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["todos"] });
 		},
-	});*/
+	});
 
 	const { mutate: deleteTodo, isPending: isDeleting } = useMutation({
 		mutationKey: ["deleteTodo"],
@@ -79,13 +80,13 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 							)}
 						</Box>
 
-						{/* <Box color={"green.500"} cursor={"pointer"} onClick={() => updateTodo()}>
+						<Box color={"green.500"} cursor={"pointer"} marginRight={3} onClick={() => updateTodo()}>
 							{!isUpdating && <FaCheckCircle size={20} />}
 							{isUpdating && <Spinner size={"sm"} />}
-						</Box> */}
+						</Box>
 
 						<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()}>
-							{!isDeleting && <MdDelete size={25} />}
+							{!isDeleting && <MdDelete size={20} />}
 							{isDeleting && <Spinner size={"sm"} />}
 						</Box>
 					</Flex>

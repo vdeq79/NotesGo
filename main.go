@@ -46,13 +46,42 @@ func main() {
 
 	app.Get("/api/todos", func(c fiber.Ctx) error {
 		var todos []Todo
-		result := db.Find(&todos)
+		result := db.Find(&todos).Order("Id ASC")
 		if result.Error != nil {
 			log.Fatalf("Error fetching todos: %v", result.Error)
 		}
 
 		// Send a string response to the client
 		return c.Status(200).JSON(fiber.Map{"todos": todos})
+	})
+
+	app.Post("/api/todos", func(c fiber.Ctx) error {
+		var todo Todo
+		if err := c.Bind().Body(todo); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		result := db.Create(&todo)
+		if result.Error != nil {
+			return c.Status(500).JSON(fiber.Map{"error": result.Error.Error()})
+		}
+
+		return c.Status(200).JSON(fiber.Map{"message": "Todo created successfully"})
+	})
+
+	app.Patch("/api/todos/:id", func(c fiber.Ctx) error {
+		id := c.Params("id")
+		var todo Todo
+		result := db.First(&todo, id)
+		if result.Error != nil {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Todo not found"})
+		}
+
+		todo.Completed = true
+		db.Save(&todo)
+
+		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
+
 	})
 
 	app.Delete("/api/todos/:id", func(c fiber.Ctx) error {

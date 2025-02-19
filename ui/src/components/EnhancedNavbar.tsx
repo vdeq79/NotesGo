@@ -24,6 +24,17 @@ export default function EnhancedNavbar() {
 		<Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
 			<Container maxW="container.xl">
 				<Flex h={16} alignItems="center" justifyContent="space-between">
+
+					{/* Mobile Menu */}
+					<IconButton
+						size="md"
+						aria-label="Open Menu"
+						display={{ md: 'none' }}
+						onClick={onToggle}
+					>
+						{open ? <IoClose /> : <IoMenu />}
+					</IconButton>
+
 					{/* Logo or Brand Name */}
 					<Text fontSize="2xl" fontWeight="bold">
 						TodoL
@@ -36,16 +47,6 @@ export default function EnhancedNavbar() {
 						<Button variant="ghost">Services</Button>
 						<Button variant="ghost">Contact</Button>
 					</HStack>
-
-					{/* Mobile Menu */}
-					<IconButton
-						size="md"
-						aria-label="Open Menu"
-						display={{ md: 'none' }}
-						onClick={onToggle}
-					>
-						{open ? <IoClose /> : <IoMenu />}
-					</IconButton>
 
 					{/* Color Mode Toggle */}
 					<Button onClick={toggleColorMode} ml={4}>
