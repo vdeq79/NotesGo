@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { toaster } from "@/components/ui/toaster"
+import { Tooltip } from "./ui/tooltip";
 
 export type Todo = {
 	id: number;
@@ -16,8 +17,8 @@ export type Todo = {
 const TodoItem = ({ todo }: { todo: Todo }) => {
 	const queryClient = useQueryClient();
 
-	const { mutate: updateTodo, isPending: isUpdating } = useMutation({
-		mutationKey: ["updateTodo"],
+	const { mutate: completeTodo, isPending: isCompleting } = useMutation({
+		mutationKey: ["completeTodo"],
 		mutationFn: async () => {
 			if (todo.completed){
 				toaster.create({
@@ -29,7 +30,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 				return;
 			}
 			try {
-				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
+				const res = await fetch(BASE_URL + `/todos/${todo.id}/complete`, {
 					method: "PATCH",
 				});
 				const data = await res.json();
@@ -103,15 +104,20 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 								)}
 							</Box>
 
-							<Box color={"green.500"} cursor={"pointer"}  marginRight={3} onClick={() => updateTodo()} boxSize={"fit-content"}>
-								{!isUpdating && <FaCheckCircle size={"22"}/>}
-								{isUpdating && <Spinner size={"md"}/>}
-							</Box>
+							<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>
+								<Box color={"green.500"} cursor={"pointer"}  marginRight={3} onClick={() => completeTodo()} boxSize={"fit-content"}>
+									{!isCompleting && <FaCheckCircle size={"22"}/>}
+									{isCompleting && <Spinner size={"md"}/>}
+								</Box>
+							</Tooltip>
 
-							<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()} boxSize={"fit-content"}>
-								{!isDeleting && <MdDelete size={"22"}/>}
-								{isDeleting && <Spinner size={"md"}/>}
-							</Box>
+							<Tooltip content = "Delete Todo" openDelay={200} closeDelay={200}>
+								<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()} boxSize={"fit-content"}>
+									{!isDeleting && <MdDelete size={"22"}/>}
+									{isDeleting && <Spinner size={"md"}/>}
+								</Box>
+							</Tooltip>
+
 						</Flex>
 
 					</Flex> 

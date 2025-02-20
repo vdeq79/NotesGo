@@ -48,7 +48,7 @@ func main() {
 
 	app.Get("/api/todos", func(c fiber.Ctx) error {
 		var todos []Todo
-		result := db.Find(&todos).Order("Id ASC")
+		result := db.Order("Id").Find(&todos)
 		if result.Error != nil {
 			log.Fatalf("Error fetching todos: %v", result.Error)
 		}
@@ -71,7 +71,7 @@ func main() {
 		return c.Status(200).JSON(fiber.Map{"message": "Todo created successfully"})
 	})
 
-	app.Patch("/api/todos/:id", func(c fiber.Ctx) error {
+	app.Patch("/api/todos/:id/complete", func(c fiber.Ctx) error {
 		id := c.Params("id")
 		var todo Todo
 		result := db.First(&todo, id)
