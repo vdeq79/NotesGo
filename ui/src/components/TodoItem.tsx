@@ -4,6 +4,7 @@ import { BASE_URL } from "../App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
+import { toaster } from "@/components/ui/toaster"
 
 export type Todo = {
 	id: number;
@@ -17,7 +18,15 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 	const { mutate: updateTodo, isPending: isUpdating } = useMutation({
 		mutationKey: ["updateTodo"],
 		mutationFn: async () => {
-			if (todo.completed) return alert("Todo is already completed");
+			if (todo.completed){
+				toaster.create({
+					title: "Todo is already completed",
+					type: "warning",
+					duration: 3000
+				})
+
+				return;
+			}
 			try {
 				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
 					method: "PATCH",
@@ -26,6 +35,13 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 				if (!res.ok) {
 					throw new Error(data.error || "Something went wrong");
 				}
+
+				toaster.create({
+					title: "Todo completed!",
+					type: "success",
+					duration: 3000
+				})
+
 				return data;
 			} catch (error) {
 				console.log(error);
@@ -54,6 +70,11 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["todos"] });
+			toaster.create({
+				title: "Todo deleted",
+				type: "success",
+				duration: 3000
+			})
 		},
 	});
     

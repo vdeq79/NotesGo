@@ -25,19 +25,6 @@ const TodoList = () => {
 
 	return (
 		<>
-			<Text
-				fontSize={"4xl"}
-				textTransform={"uppercase"}
-				fontWeight={"bold"}
-				textAlign={"center"}
-				my={2}
-                bgGradient='to-l'
-                gradientFrom={"#0b85f8"}
-                gradientTo={"#00ffff"}
-				bgClip='text'
-			>
-				Today's Tasks
-			</Text>
             <Container maxW={"900px"}>
                 {isLoading && (
                     <Flex justifyContent={"center"} my={4}>
