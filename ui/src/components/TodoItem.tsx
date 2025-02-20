@@ -81,7 +81,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
     
 
 	return (
-		<Card.Root variant={"elevated"} width={"100%"}>
+		<Card.Root bg={useColorModeValue("white", "gray.800")} variant={"elevated"} width={"100%"} transition={"all 0.3s ease-in-out"} _hover={{ transform: "scale(1.03)" }}>
 			<Card.Body gap={"2"}>
 				<Card.Title>
 					<Flex flex={1}>
