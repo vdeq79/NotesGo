@@ -1,4 +1,4 @@
-import { Badge,  Box,  Flex,  Spinner,  Text } from "@chakra-ui/react";
+import { Badge,  Box,  Card,  Flex,  Spinner,  Text } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
 import { BASE_URL } from "../App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,8 @@ import { toaster } from "@/components/ui/toaster"
 
 export type Todo = {
 	id: number;
-	body: string;
+	identifier: string;
+	description: string;
 	completed: boolean;
 };
 
@@ -80,41 +81,47 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
     
 
 	return (
-        <Box bg={useColorModeValue("gray.400", "gray.700")} px={2} my={3} borderRadius={"0.7rem"}>
+		<Card.Root variant={"elevated"} width={"100%"}>
+			<Card.Body gap={"2"}>
+				<Card.Title>
+					<Flex flex={1}>
+						<Text color={todo.completed ? "green.400" : "yellow.400"} fontSize={"xl"} textDecoration={todo.completed ? "line-through" : "none"}>
+							{todo.identifier}
+						</Text>
+						
+						<Flex ml={"auto"} alignItems={"center"}>
+							<Box marginRight={5} boxSize={"fit-content"}>
+								{todo.completed && (
+									<Badge size={"md"} colorPalette='green' variant={"surface"}>
+										Done
+									</Badge>
+								)}
+								{!todo.completed && (
+									<Badge  size={"md"} colorPalette='yellow' variant={"surface"}>
+										In Progress
+									</Badge>
+								)}
+							</Box>
 
-                <Flex flex={1} p={2}>
-                    <Text color={todo.completed ? "green.200" : "yellow.200"} textDecoration={todo.completed ? "line-through" : "none"}>
-                        {todo.body}
-                    </Text>
-					
-					<Flex ml={"auto"}>
-						<Box marginRight={5}>
-							{todo.completed && (
-								<Badge colorPalette='green'>
-									Done
-								</Badge>
-							)}
-							{!todo.completed && (
-								<Badge colorPalette='yellow'>
-									In Progress
-								</Badge>
-							)}
-						</Box>
+							<Box color={"green.500"} cursor={"pointer"}  marginRight={3} onClick={() => updateTodo()} boxSize={"fit-content"}>
+								{!isUpdating && <FaCheckCircle size={"22"}/>}
+								{isUpdating && <Spinner size={"md"}/>}
+							</Box>
 
-						<Box color={"green.500"} cursor={"pointer"} marginRight={3} onClick={() => updateTodo()}>
-							{!isUpdating && <FaCheckCircle size={20} />}
-							{isUpdating && <Spinner size={"sm"} />}
-						</Box>
+							<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()} boxSize={"fit-content"}>
+								{!isDeleting && <MdDelete size={"22"}/>}
+								{isDeleting && <Spinner size={"md"}/>}
+							</Box>
+						</Flex>
 
-						<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()}>
-							{!isDeleting && <MdDelete size={20} />}
-							{isDeleting && <Spinner size={"sm"} />}
-						</Box>
-					</Flex>
+					</Flex> 
+				</Card.Title>
+				<Card.Description>
+					{todo.description}
+				</Card.Description>
 
-                </Flex> 
-
-        </Box>
+			</Card.Body>
+		</Card.Root>
 	);
 };
 

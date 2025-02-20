@@ -11,9 +11,10 @@ import (
 )
 
 type Todo struct {
-	Id        uint   `gorm:"PrimaryKey" json:"id"`
-	Completed bool   `gorm:"default:false" json:"completed"`
-	Body      string `gorm:"not null" json:"body"`
+	Id          uint   `gorm:"PrimaryKey" json:"id"`
+	Completed   bool   `gorm:"default:false" json:"completed"`
+	Identifier  string `gorm:"not null" json:"identifier"`
+	Description string `json:"description"`
 }
 
 func main() {
@@ -27,7 +28,8 @@ func main() {
 
 	fmt.Println("Connected to database")
 
-	//db.AutoMigrate(&Todo{})
+	db.AutoMigrate(&Todo{})
+	db.Migrator().DropColumn(&Todo{}, "body")
 
 	fmt.Println("Database migrated")
 
@@ -57,7 +59,7 @@ func main() {
 
 	app.Post("/api/todos", func(c fiber.Ctx) error {
 		var todo Todo
-		if err := c.Bind().Body(todo); err != nil {
+		if err := c.Bind().Body(&todo); err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
 
