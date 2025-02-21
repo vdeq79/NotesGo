@@ -1,12 +1,12 @@
-import { Badge,  Box,  Button,  Card,  Flex,  HStack, IconButton,  Spinner,  Text } from "@chakra-ui/react";
+import { Badge,  Box,  Card,  Flex,  HStack, IconButton,  Spinner,  Text } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
 import { BASE_URL } from "../App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
-import { FaCheckCircle, FaEdit } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import { toaster } from "@/components/ui/toaster"
 import { Tooltip } from "./ui/tooltip";
-import TodoModal from "./TodoModal";
+import EditTodoModal from "./EditTodoModal";
 
 export type Todo = {
 	id: number;
@@ -14,92 +14,6 @@ export type Todo = {
 	description: string;
 	completed: boolean;
 };
-
-
-function editTodoModel({ todo }: { todo: Todo }) {
-
-	const queryClient = useQueryClient();
-
-	const { mutate: editTodo, isPending: isEditing } = useMutation({
-		mutationKey: ["editTodo"],
-		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
-			try {
-				todo.identifier = identifier;
-				todo.description = description;
-
-				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
-					method: "PATCH",
-					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify(todo)
-				});
-				const data = await res.json();
-				if (!res.ok) {
-					throw new Error(data.error || "Something went wrong");
-				}
-
-				toaster.create({
-					title: "Todo edited!",
-					type: "success",
-					duration: 3000
-				})
-
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
-		},
-	});
-
-
-
-	function handleFormSubmit(e: React.FormEvent<HTMLElement>, identifier: string, description: string){
-		e.preventDefault();
-		editTodo({identifier, description});
-	}
-
-
-
-	function modelTrigger(){
-		return(
-			<IconButton color={"yellow.500"} variant={"plain"} size={"lg"}>
-				<Tooltip content = "Edit Todo" openDelay={200} closeDelay={200}>
-					<Box>
-						{!isEditing && <FaEdit/>}
-						{isEditing && <Spinner/>} 
-					</Box>
-				</Tooltip>
-			</IconButton>
-		);
-	}
-
-	function saveButton(){
-
-		return(
-			<Button type="submit" colorScheme="blue" mr={3}>
-            	Save
-            </Button>
-		);
-	}
-
-
-	return (
-		TodoModal({
-			props: {
-				modelTrigger: modelTrigger(),
-				initialDescription: todo.description,
-				initialIdentifier: todo.identifier,
-				saveButton: saveButton,
-				handleFormSubmit: handleFormSubmit
-			}
-		})
-	);
-}
-
-
-
 
 const TodoItem = ({ todo }: { todo: Todo }) => {
 	const queryClient = useQueryClient();
@@ -167,7 +81,6 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 		},
 	});
     
-
 	return (
 		<Card.Root bg={useColorModeValue("white", "gray.800")} variant={"elevated"} width={"100%"} transition={"all 0.3s ease-in-out"} _hover={{ transform: "scale(1.03)" }}>
 			<Card.Body gap={"2"}>
@@ -192,7 +105,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 							</Box>
 
 							<HStack spaceX={-2}>
-								{editTodoModel({todo: todo})}
+								<EditTodoModal todo={todo}/>
 
 								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"}>
 									<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>
