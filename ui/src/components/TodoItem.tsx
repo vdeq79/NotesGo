@@ -105,7 +105,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 							</Box>
 
 							<HStack spaceX={-2}>
-								<EditTodoButton todo={todo}/>
+								{EditTodoButton(todo, queryClient)}
 
 								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"}>
 									<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>

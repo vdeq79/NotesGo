@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { Todo } from "./TodoItem";
 import { BASE_URL } from "@/App";
 import { toaster } from "./ui/toaster";
@@ -7,9 +7,7 @@ import { Tooltip } from "./ui/tooltip";
 import { FaEdit } from "react-icons/fa";
 import TodoModal from "./TodoModal";
 
-export default function EditTodoButton({ todo }: { todo: Todo }) {
-
-	const queryClient = useQueryClient();
+export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 
 	const { mutate: editTodo, isPending: isEditing } = useMutation({
 		mutationKey: ["editTodo"],
