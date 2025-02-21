@@ -1,11 +1,12 @@
-import { Badge,  Box,  Card,  Flex,  Spinner,  Text } from "@chakra-ui/react";
+import { Badge,  Box,  Button,  Card,  Flex,  HStack, IconButton,  Spinner,  Text } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
 import { BASE_URL } from "../App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaEdit } from "react-icons/fa";
 import { toaster } from "@/components/ui/toaster"
 import { Tooltip } from "./ui/tooltip";
+import TodoModal from "./TodoModal";
 
 export type Todo = {
 	id: number;
@@ -13,6 +14,79 @@ export type Todo = {
 	description: string;
 	completed: boolean;
 };
+
+
+function editTodoModel({ todo }: { todo: Todo }) {
+	const queryClient = useQueryClient();
+
+	const { mutate: editTodo, isPending: isEditing } = useMutation({
+		mutationKey: ["editTodo"],
+		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
+			try {
+				todo.identifier = identifier;
+				todo.description = description;
+
+				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
+					method: "PATCH",
+					headers: {"Content-Type": "application/json"},
+					body: JSON.stringify(todo)
+				});
+				const data = await res.json();
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong");
+				}
+
+				toaster.create({
+					title: "Todo edited!",
+					type: "success",
+					duration: 3000
+				})
+
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		},
+	});
+
+	function modelTrigger(){
+		return(
+			<IconButton color={"yellow.500"} variant={"plain"} size={"lg"}>
+				<Tooltip content = "Edit Todo" openDelay={200} closeDelay={200}>
+					<Box>
+						{!isEditing && <FaEdit/>}
+						{isEditing && <Spinner/>} 
+					</Box>
+				</Tooltip>
+			</IconButton>
+		);
+	}
+
+	function saveButton(identifier: string, description: string){
+
+		return(
+			<Button colorScheme="blue" onClick={() => editTodo({identifier, description})} mr={3}>
+            	Save
+            </Button>
+		);
+	}
+
+
+	return TodoModal({
+		props: {
+			modelTrigger: modelTrigger(),
+			initialDescription: todo.description,
+			initialIdentifier: todo.identifier,
+			saveButton: saveButton
+		}
+	})
+}
+
+
+
 
 const TodoItem = ({ todo }: { todo: Todo }) => {
 	const queryClient = useQueryClient();
@@ -104,19 +178,27 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 								)}
 							</Box>
 
-							<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>
-								<Box color={"green.500"} cursor={"pointer"}  marginRight={3} onClick={() => completeTodo()} boxSize={"fit-content"}>
-									{!isCompleting && <FaCheckCircle size={"22"}/>}
-									{isCompleting && <Spinner size={"md"}/>}
-								</Box>
-							</Tooltip>
+							<HStack spaceX={-2}>
+								{editTodoModel({todo: todo})}
 
-							<Tooltip content = "Delete Todo" openDelay={200} closeDelay={200}>
-								<Box color={"red.500"}  cursor={"pointer"} onClick={() => deleteTodo()} boxSize={"fit-content"}>
-									{!isDeleting && <MdDelete size={"22"}/>}
-									{isDeleting && <Spinner size={"md"}/>}
-								</Box>
-							</Tooltip>
+								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"}>
+									<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>
+										<Box >
+											{!isCompleting && <FaCheckCircle/>}
+											{isCompleting && <Spinner/>}
+										</Box>
+									</Tooltip>
+								</IconButton>
+
+								<IconButton color={"red.500"} onClick={() => deleteTodo()} size={"lg"} variant={"plain"}>
+									<Tooltip content = "Delete Todo" openDelay={200} closeDelay={200}>
+										<Box>
+											{!isDeleting && <MdDelete/>}
+											{isDeleting && <Spinner/>}
+										</Box>
+									</Tooltip>
+								</IconButton>
+							</HStack>
 
 						</Flex>
 

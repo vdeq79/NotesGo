@@ -29,7 +29,7 @@ func main() {
 	fmt.Println("Connected to database")
 
 	db.AutoMigrate(&Todo{})
-	db.Migrator().DropColumn(&Todo{}, "body")
+	//db.Migrator().DropColumn(&Todo{}, "body")
 
 	fmt.Println("Database migrated")
 
@@ -80,6 +80,28 @@ func main() {
 		}
 
 		todo.Completed = true
+		db.Save(&todo)
+
+		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
+
+	})
+
+	app.Patch("/api/todos/:id", func(c fiber.Ctx) error {
+		id := c.Params("id")
+		var todo Todo
+		result := db.First(&todo, id)
+		if result.Error != nil {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Todo not found"})
+		}
+
+		updatedTodo := new(Todo)
+		if err := c.Bind().Body(updatedTodo); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		todo.Identifier = updatedTodo.Identifier
+		todo.Description = updatedTodo.Description
+
 		db.Save(&todo)
 
 		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
