@@ -17,6 +17,7 @@ export type Todo = {
 
 
 function editTodoModel({ todo }: { todo: Todo }) {
+
 	const queryClient = useQueryClient();
 
 	const { mutate: editTodo, isPending: isEditing } = useMutation({
@@ -52,6 +53,15 @@ function editTodoModel({ todo }: { todo: Todo }) {
 		},
 	});
 
+
+
+	function handleFormSubmit(e: React.FormEvent<HTMLElement>, identifier: string, description: string){
+		e.preventDefault();
+		editTodo({identifier, description});
+	}
+
+
+
 	function modelTrigger(){
 		return(
 			<IconButton color={"yellow.500"} variant={"plain"} size={"lg"}>
@@ -65,24 +75,27 @@ function editTodoModel({ todo }: { todo: Todo }) {
 		);
 	}
 
-	function saveButton(identifier: string, description: string){
+	function saveButton(){
 
 		return(
-			<Button colorScheme="blue" onClick={() => editTodo({identifier, description})} mr={3}>
+			<Button type="submit" colorScheme="blue" mr={3}>
             	Save
             </Button>
 		);
 	}
 
 
-	return TodoModal({
-		props: {
-			modelTrigger: modelTrigger(),
-			initialDescription: todo.description,
-			initialIdentifier: todo.identifier,
-			saveButton: saveButton
-		}
-	})
+	return (
+		TodoModal({
+			props: {
+				modelTrigger: modelTrigger(),
+				initialDescription: todo.description,
+				initialIdentifier: todo.identifier,
+				saveButton: saveButton,
+				handleFormSubmit: handleFormSubmit
+			}
+		})
+	);
 }
 
 

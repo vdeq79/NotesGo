@@ -1,4 +1,4 @@
-import { Button, DialogRootProvider, Field, Input, useDialog } from "@chakra-ui/react"
+import { Button, Field, Input } from "@chakra-ui/react"
 import {
   DialogActionTrigger,
   DialogBody,
@@ -8,30 +8,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogRoot,
 } from "@/components/ui/dialog"
 import React, { useState } from "react";
 
 interface TodoModalProps {
   modelTrigger:  React.JSX.Element;
-  saveButton: (identifier: string, description: string) => React.JSX.Element;
+  saveButton: () => React.JSX.Element;
   initialIdentifier?: string;
   initialDescription?: string;
+  handleFormSubmit: (e: React.FormEvent<HTMLElement>, identifier: any, description: any) => void
 }
 
 
 const TodoModal = ({props}: {props: TodoModalProps}) => {
 
-	const [identifier, setIdentifier] = useState(props.initialIdentifier ?? "");
-	const [description, setDescription] = useState(props.initialDescription ?? "");
-	const dialog = useDialog();
+	const [open, setOpen] = useState(false);
+
+	const initialTodoInfo = {identifier: props.initialIdentifier ?? "", description: props.initialDescription ?? ""};
+
+	const [todoInfo, setTodoInfo] = React.useState({
+		identifier: initialTodoInfo.identifier, 
+		description: initialTodoInfo.description,
+	});
+
 
 	return (
-		<DialogRootProvider value={dialog}> 
-
+		<DialogRoot open={open} onOpenChange={(e)=> setOpen(e.open)} onExitComplete={() => setTodoInfo(initialTodoInfo)} trapFocus={false}> 
 			<DialogTrigger asChild>
 				{props.modelTrigger}
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent as="form" onSubmit={(e) => props.handleFormSubmit(e, todoInfo.identifier, todoInfo.description)}>
 				<DialogHeader>
 					<DialogTitle>Todo</DialogTitle>
 				</DialogHeader>
@@ -41,7 +48,7 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 							Identifier
 						<Field.RequiredIndicator />
 						</Field.Label>
-						<Input value={identifier} onChange={(e) => setIdentifier(e.target.value)} />
+						<Input value={todoInfo.identifier} onChange={(e) => setTodoInfo({...todoInfo, identifier: e.target.value})} />
 					</Field.Root>
 
 					<Field.Root>
@@ -49,25 +56,21 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 							Description
 						<Field.RequiredIndicator />
 						</Field.Label>
-						<Input value={description} onChange={(e) => setDescription(e.target.value)} />
+						<Input value={todoInfo.description} onChange={(e) => setTodoInfo({...todoInfo, description: e.target.value})} />
 					</Field.Root>
 				</DialogBody>
 
 				<DialogFooter>
 					<DialogActionTrigger asChild>
-						<Button variant="outline" onClick={() => {
-							setIdentifier(props.initialIdentifier ?? ""); 
-							setDescription(props.initialDescription ?? "")}}>
-								Cancel
-						</Button>
+						<Button variant="outline">Cancel</Button>
 					</DialogActionTrigger>					
 					<DialogActionTrigger asChild>
-						{props.saveButton(identifier, description)}
+						{props.saveButton()}
 					</DialogActionTrigger>
 				</DialogFooter>
-				<DialogCloseTrigger />
+				<DialogCloseTrigger/>
 			</DialogContent>
-		</DialogRootProvider>
+		</DialogRoot>
 	);
 }
 
