@@ -6,7 +6,7 @@ import { MdDelete } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { toaster } from "@/components/ui/toaster"
 import { Tooltip } from "./ui/tooltip";
-import EditTodoModal from "./EditTodoModal";
+import EditTodoButton from "./EditTodoButton";
 
 export type Todo = {
 	id: number;
@@ -105,7 +105,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 							</Box>
 
 							<HStack spaceX={-2}>
-								<EditTodoModal todo={todo}/>
+								<EditTodoButton todo={todo}/>
 
 								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"}>
 									<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>

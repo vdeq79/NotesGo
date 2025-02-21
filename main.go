@@ -58,12 +58,17 @@ func main() {
 	})
 
 	app.Post("/api/todos", func(c fiber.Ctx) error {
-		var todo Todo
-		if err := c.Bind().Body(&todo); err != nil {
+
+		todoInfo := struct {
+			Identifier  string `json:"identifier"`
+			Description string `json:"description"`
+		}{}
+
+		if err := c.Bind().Body(&todoInfo); err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		result := db.Create(&todo)
+		result := db.Create(&Todo{Identifier: todoInfo.Identifier, Description: todoInfo.Description})
 		if result.Error != nil {
 			return c.Status(500).JSON(fiber.Map{"error": result.Error.Error()})
 		}

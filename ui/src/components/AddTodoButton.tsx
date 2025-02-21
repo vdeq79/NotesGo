@@ -1,27 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Todo } from "./TodoItem";
 import { BASE_URL } from "@/App";
 import { toaster } from "./ui/toaster";
-import { Box, Button, IconButton, Spinner } from "@chakra-ui/react";
-import { Tooltip } from "./ui/tooltip";
-import { FaEdit } from "react-icons/fa";
+import { Button } from "@chakra-ui/react";
 import TodoModal from "./TodoModal";
+import React from "react";
 
-export default function EditTodoModal({ todo }: { todo: Todo }) {
+export default function AddTodoButton() {
 
 	const queryClient = useQueryClient();
 
-	const { mutate: editTodo, isPending: isEditing } = useMutation({
-		mutationKey: ["editTodo"],
+	const { mutate: addTodo} = useMutation({
+		mutationKey: ["addTodo"],
 		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
 			try {
-				todo.identifier = identifier;
-				todo.description = description;
 
-				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
-					method: "PATCH",
+				const res = await fetch(BASE_URL + `/todos`, {
+					method: "POST",
 					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify(todo)
+					body: JSON.stringify({identifier: identifier, description: description})
 				});
 				const data = await res.json();
 				if (!res.ok) {
@@ -29,7 +25,7 @@ export default function EditTodoModal({ todo }: { todo: Todo }) {
 				}
 
 				toaster.create({
-					title: "Todo edited!",
+					title: "Todo Added!",
 					type: "success",
 					duration: 3000
 				})
@@ -48,21 +44,16 @@ export default function EditTodoModal({ todo }: { todo: Todo }) {
 
 	function handleFormSubmit(e: React.FormEvent<HTMLElement>, identifier: string, description: string){
 		e.preventDefault();
-		editTodo({identifier, description});
+		addTodo({identifier, description});
 	}
 
 
 
 	function modelTrigger(){
 		return(
-			<IconButton color={"yellow.500"} variant={"plain"} size={"lg"} disabled={todo.completed}>
-				<Tooltip content = "Edit Todo" openDelay={200} closeDelay={200}>
-					<Box>
-						{!isEditing && <FaEdit/>}
-						{isEditing && <Spinner/>} 
-					</Box>
-				</Tooltip>
-			</IconButton>
+			<Button colorPalette={"teal"} variant={"surface"} size={"lg"}>
+				Add Todo
+			</Button>
 		);
 	}
 
@@ -80,8 +71,6 @@ export default function EditTodoModal({ todo }: { todo: Todo }) {
 		TodoModal({
 			props: {
 				modelTrigger: modelTrigger(),
-				initialDescription: todo.description,
-				initialIdentifier: todo.identifier,
 				saveButton: saveButton,
 				handleFormSubmit: handleFormSubmit
 			}
