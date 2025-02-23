@@ -11,9 +11,10 @@ import (
 )
 
 type Todo struct {
-	Id        uint   `gorm:"PrimaryKey" json:"id"`
-	Completed bool   `gorm:"default:false" json:"completed"`
-	Body      string `gorm:"not null" json:"body"`
+	Id          uint   `gorm:"PrimaryKey" json:"id"`
+	Completed   bool   `gorm:"default:false" json:"completed"`
+	Identifier  string `gorm:"not null" json:"identifier"`
+	Description string `json:"description"`
 }
 
 func main() {
@@ -28,6 +29,8 @@ func main() {
 	fmt.Println("Connected to database")
 
 	db.AutoMigrate(&Todo{})
+
+	fmt.Println("Database migrated")
 
 	app := fiber.New()
 
@@ -54,15 +57,37 @@ func main() {
 	})
 
 	app.Post("/api/todos", func(c fiber.Ctx) error {
-		body := string(c.Body())
 
-		result := db.Create(&Todo{Body: body})
+		todoInfo := struct {
+			Identifier  string `json:"identifier"`
+			Description string `json:"description"`
+		}{}
 
+		if err := c.Bind().Body(&todoInfo); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		result := db.Create(&Todo{Identifier: todoInfo.Identifier, Description: todoInfo.Description})
 		if result.Error != nil {
 			return c.Status(500).JSON(fiber.Map{"error": result.Error.Error()})
 		}
 
 		return c.Status(200).JSON(fiber.Map{"message": "Todo created successfully"})
+	})
+
+	app.Patch("/api/todos/:id/complete", func(c fiber.Ctx) error {
+		id := c.Params("id")
+		var todo Todo
+		result := db.First(&todo, id)
+		if result.Error != nil {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Todo not found"})
+		}
+
+		todo.Completed = true
+		db.Save(&todo)
+
+		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
+
 	})
 
 	app.Patch("/api/todos/:id", func(c fiber.Ctx) error {
@@ -73,7 +98,14 @@ func main() {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Todo not found"})
 		}
 
-		todo.Completed = true
+		updatedTodo := new(Todo)
+		if err := c.Bind().Body(updatedTodo); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		todo.Identifier = updatedTodo.Identifier
+		todo.Description = updatedTodo.Description
+
 		db.Save(&todo)
 
 		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})

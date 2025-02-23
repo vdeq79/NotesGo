@@ -10,14 +10,12 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 
-import { IoMoon, IoMenu, IoClose } from 'react-icons/io5';
-import { LuSun } from 'react-icons/lu';
-import { useColorMode, useColorModeValue } from './ui/color-mode';
+import { IoMenu, IoClose } from 'react-icons/io5';
+import { ColorModeButton, useColorModeValue } from './ui/color-mode';
 
 
 
 export default function EnhancedNavbar() {
-	const { colorMode, toggleColorMode } = useColorMode();
 	const { open, onToggle } = useDisclosure();
 
 	return (
@@ -48,10 +46,7 @@ export default function EnhancedNavbar() {
 						<Button variant="ghost">Contact</Button>
 					</HStack>
 
-					{/* Color Mode Toggle */}
-					<Button onClick={toggleColorMode} ml={4}>
-						{colorMode === 'light' ? <IoMoon /> : <LuSun />}
-					</Button>
+					<ColorModeButton />
 				</Flex>
 
 				{/* Collapsible Content */}
