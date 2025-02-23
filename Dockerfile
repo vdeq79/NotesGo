@@ -13,8 +13,6 @@ COPY ui/ ./
 # If you have a TypeScript configuration file, ensure it's copied
 COPY ui/tsconfig.json ./
 
-# Build the React app
-RUN npm run build
 
 # Stage 2: Build the Go backend
 FROM golang:1.24 AS backend-builder
