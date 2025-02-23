@@ -53,7 +53,7 @@ func main() {
 		}
 
 		// Send a string response to the client
-		return c.Status(200).JSON(fiber.Map{"todos": todos})
+		return c.Status(200).JSON(todos)
 	})
 
 	app.Post("/api/todos", func(c fiber.Ctx) error {
@@ -67,12 +67,17 @@ func main() {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		result := db.Create(&Todo{Identifier: todoInfo.Identifier, Description: todoInfo.Description})
+		todo := Todo{
+			Identifier:  todoInfo.Identifier,
+			Description: todoInfo.Description,
+		}
+
+		result := db.Create(&todo)
 		if result.Error != nil {
 			return c.Status(500).JSON(fiber.Map{"error": result.Error.Error()})
 		}
 
-		return c.Status(200).JSON(fiber.Map{"message": "Todo created successfully"})
+		return c.Status(200).JSON(todo)
 	})
 
 	app.Patch("/api/todos/:id/complete", func(c fiber.Ctx) error {
@@ -86,7 +91,7 @@ func main() {
 		todo.Completed = true
 		db.Save(&todo)
 
-		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
+		return c.Status(200).JSON(todo)
 
 	})
 
@@ -108,7 +113,7 @@ func main() {
 
 		db.Save(&todo)
 
-		return c.Status(200).JSON(fiber.Map{"message": "Todo updated successfully"})
+		return c.Status(200).JSON(todo)
 
 	})
 

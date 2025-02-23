@@ -1,13 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { BASE_URL } from "@/App";
 import { toaster } from "./ui/toaster";
 import { Button } from "@chakra-ui/react";
 import TodoModal from "./TodoModal";
 import React from "react";
+import { Todo } from "./TodoItem";
 
-export default function AddTodoButton() {
-
-	const queryClient = useQueryClient();
+const AddTodoButton = (
+	props: {
+		addTodofn: (todo: Todo) => void
+	}
+) => {
 
 	const { mutate: addTodo} = useMutation({
 		mutationKey: ["addTodo"],
@@ -35,8 +38,8 @@ export default function AddTodoButton() {
 				console.log(error);
 			}
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		onSuccess: (data) => {
+			props.addTodofn(data);
 		},
 	});
 
@@ -77,3 +80,5 @@ export default function AddTodoButton() {
 		})
 	);
 }
+
+export default AddTodoButton;
