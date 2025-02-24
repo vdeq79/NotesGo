@@ -3,33 +3,32 @@ import TodoList from "./components/TodoList";
 import EnhancedNavbar from "./components/EnhancedNavbar";
 import { Toaster } from "@/components/ui/toaster"
 import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import MobileBox from "./components/MobileBox";
 
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api" : "/api";
 
 function App() {
 
-
-
-return (
-    <>
-    <Canvas style={{ position: "fixed", width: "100%", height: "100%" }} camera={{ position: [0, 10, 10] }}>
-        <axesHelper args={[20]}  />
-        <gridHelper args={[20, 20]} />
-        <mesh  position={[-11, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-        </mesh>
-    </Canvas>
-        <Theme>
-            <Stack h="100vh">
-                <EnhancedNavbar />
-                <Container>
-                    <TodoList />
-                    <Toaster />
-                </Container>
-            </Stack>
-    </Theme>
-    </>
-)
+    return (
+        <>
+        <Canvas style={{ position: "fixed", width: "100%", height: "100%" }} camera={{ position: [0, 10, 10] }}>
+            <OrbitControls />
+            <axesHelper args={[20]}  />
+            <gridHelper args={[20, 20]} />
+            <MobileBox position={[-10.5, 0, 0]} depth={2}/>
+        </Canvas>
+            <Theme>
+                <Stack h="100vh">
+                    <EnhancedNavbar />
+                    <Container>
+                        <TodoList />
+                        <Toaster />
+                    </Container>
+                </Stack>
+        </Theme>
+        </>
+    )
 }
 
 export default App
