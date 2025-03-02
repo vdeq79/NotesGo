@@ -12,12 +12,12 @@ function App() {
 
     return (
         <>
-        <Canvas style={{ position: "fixed", width: "100%", height: "100%" }} camera={{ position: [0, 10, 10] }}>
+        {/* <Canvas style={{ position: "fixed", width: "100%", height: "100%" }} camera={{ position: [0, 10, 10] }}>
             <OrbitControls />
             <axesHelper args={[20]}  />
             <gridHelper args={[20, 20]} />
             <MobileBox position={[-10.5, 0, 0]} depth={2}/>
-        </Canvas>
+        </Canvas> */}
             <Theme>
                 <Stack h="100vh">
                     <EnhancedNavbar />

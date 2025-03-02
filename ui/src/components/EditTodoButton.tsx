@@ -26,19 +26,18 @@ export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 					throw new Error(data.error || "Something went wrong");
 				}
 
-				toaster.create({
-					title: "Todo edited!",
-					type: "success",
-					duration: 3000
-				})
-
 				return data;
 			} catch (error) {
 				console.log(error);
 			}
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(["todos", todo.id], data);
+			toaster.create({
+				title: "Todo edited!",
+				type: "success",
+				duration: 3000
+			})
 		},
 	});
 

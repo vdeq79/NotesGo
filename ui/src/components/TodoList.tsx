@@ -5,12 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "../App";
 import TodoListHeader from "./TodoListHeader";
 import AddTodoButton from "./AddTodoButton";
-import { useEffect, useState } from "react";
 
 
 const TodoList = () => {
 
-	const { data, isPending } = useQuery<Todo[]>({
+	const { data: todos, isPending } = useQuery<Todo[]>({
 		queryKey: ["todos"],
 		queryFn: async () => {
 			try {
@@ -27,24 +26,12 @@ const TodoList = () => {
 		},
 	});
 
-	const [todos, setTodos] = useState<Todo[]>([]);
-
-	useEffect(() => {
-		if (data) {
-			setTodos(data);
-		}
-	}, [data]);
-
-	function addTodo(todo: Todo) {
-		setTodos([...todos, todo]);
-	}
-
 	return (
 		<>
 			<TodoListHeader HeaderContent="Today's Tasks" />
 
 			<Flex justify={"flex-end"} my={4}>
-				<AddTodoButton addTodofn={addTodo} />
+				<AddTodoButton />
 			</Flex>
 
 			<VStack maxWidth={"900px"} mx={"auto"} gapY={4}>

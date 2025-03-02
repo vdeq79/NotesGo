@@ -39,19 +39,18 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 					throw new Error(data.error || "Something went wrong");
 				}
 
-				toaster.create({
-					title: "Todo completed!",
-					type: "success",
-					duration: 3000
-				})
-
 				return data;
 			} catch (error) {
 				console.log(error);
 			}
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(["todos", todo.id], data);
+			toaster.create({
+				title: "Todo completed!",
+				type: "success",
+				duration: 3000
+			})
 		},
 	});
 
@@ -72,7 +71,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 			}
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
+			queryClient.setQueryData(["todos"], (old: Todo[]) => old.filter((t) => t.id !== todo.id));
 			toaster.create({
 				title: "Todo deleted",
 				type: "success",

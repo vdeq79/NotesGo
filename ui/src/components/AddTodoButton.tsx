@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/App";
 import { toaster } from "./ui/toaster";
 import { Button } from "@chakra-ui/react";
@@ -6,11 +6,9 @@ import TodoModal from "./TodoModal";
 import React from "react";
 import { Todo } from "./TodoItem";
 
-const AddTodoButton = (
-	props: {
-		addTodofn: (todo: Todo) => void
-	}
-) => {
+const AddTodoButton = () => {
+
+	const queryClient = useQueryClient();
 
 	const { mutate: addTodo} = useMutation({
 		mutationKey: ["addTodo"],
@@ -27,19 +25,18 @@ const AddTodoButton = (
 					throw new Error(data.error || "Something went wrong");
 				}
 
-				toaster.create({
-					title: "Todo Added!",
-					type: "success",
-					duration: 3000
-				})
-
 				return data;
 			} catch (error) {
 				console.log(error);
 			}
 		},
 		onSuccess: (data) => {
-			props.addTodofn(data);
+			queryClient.setQueryData(["todos"], (old: Todo[]) => [...old, data]);
+			toaster.create({
+				title: "Todo Added!",
+				type: "success",
+				duration: 3000
+			})
 		},
 	});
 
