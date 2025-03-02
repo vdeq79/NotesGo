@@ -1,10 +1,10 @@
 import { Container, Stack, Theme } from "@chakra-ui/react"
-import TodoList from "./components/TodoList";
 import EnhancedNavbar from "./components/EnhancedNavbar";
 import { Toaster } from "@/components/ui/toaster"
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import MobileBox from "./components/MobileBox";
+import Home from "./pages/Home/main";
 
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api" : "/api";
 
@@ -22,7 +22,7 @@ function App() {
                 <Stack h="100vh">
                     <EnhancedNavbar />
                     <Container>
-                        <TodoList />
+                        <Home />
                         <Toaster />
                     </Container>
                 </Stack>

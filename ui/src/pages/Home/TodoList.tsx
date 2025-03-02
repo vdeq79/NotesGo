@@ -1,10 +1,9 @@
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import TodoItem, { Todo } from "./TodoItem";
+import TodoItem from "./TodoItem";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../App";
-import TodoListHeader from "./TodoListHeader";
-import AddTodoButton from "./AddTodoButton";
+import { BASE_URL } from "@/App";
+import Todo from "@/types/Todo";
 
 
 const TodoList = () => {
@@ -28,12 +27,6 @@ const TodoList = () => {
 
 	return (
 		<>
-			<TodoListHeader HeaderContent="Today's Tasks" />
-
-			<Flex justify={"flex-end"} my={4}>
-				<AddTodoButton />
-			</Flex>
-
 			<VStack maxWidth={"900px"} mx={"auto"} gapY={4}>
                 {isPending && (
                     <Flex justifyContent={"center"} my={4}>

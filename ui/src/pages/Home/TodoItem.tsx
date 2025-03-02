@@ -1,23 +1,17 @@
 import { Badge,  Box,  Card,  Flex,  HStack, IconButton,  Spinner,  Text } from "@chakra-ui/react";
-import { useColorModeValue } from "./ui/color-mode";
-import { BASE_URL } from "../App";
+import { useColorModeValue } from "@/components/ui/color-mode";
+import { BASE_URL } from "@/App";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { toaster } from "@/components/ui/toaster"
-import { Tooltip } from "./ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 import EditTodoButton from "./EditTodoButton";
+import Todo from "@/types/Todo";
 
-export type Todo = {
-	id: number;
-	identifier: string;
-	description: string;
-	completed: boolean;
-};
-
-const TodoItem = ({ todo }: { todo: Todo }) => {
+const TodoItem = ({todo} : { todo: Todo}) => {
 	const queryClient = useQueryClient();
-
+	
 	const { mutate: completeTodo, isPending: isCompleting } = useMutation({
 		mutationKey: ["completeTodo"],
 		mutationFn: async () => {
@@ -45,12 +39,14 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 			}
 		},
 		onSuccess: (data) => {
-			queryClient.setQueryData(["todos", todo.id], data);
-			toaster.create({
-				title: "Todo completed!",
-				type: "success",
-				duration: 3000
-			})
+			if(data){
+				queryClient.setQueryData(["todos"], (old: Todo[]) => old.map((t) => t.id === todo.id ? data : t));
+				toaster.create({
+					title: "Todo completed!",
+					type: "success",
+					duration: 3000
+				})
+			}
 		},
 	});
 

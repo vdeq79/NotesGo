@@ -6,7 +6,7 @@ import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ChakraProvider } from "@chakra-ui/react"
 import { ColorModeProvider } from './components/ui/color-mode.tsx'
-import { system } from './components/Theme.ts'
+import { system } from './config/Theme.ts'
 
 const queryClient = new QueryClient();
 

@@ -1,11 +1,11 @@
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import { Todo } from "./TodoItem";
 import { BASE_URL } from "@/App";
-import { toaster } from "./ui/toaster";
+import { toaster } from "@/components/ui/toaster";
 import { Box, Button, IconButton, Spinner } from "@chakra-ui/react";
-import { Tooltip } from "./ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 import { FaEdit } from "react-icons/fa";
 import TodoModal from "./TodoModal";
+import Todo from "@/types/Todo";
 
 export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 
@@ -32,7 +32,7 @@ export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 			}
 		},
 		onSuccess: (data) => {
-			queryClient.setQueryData(["todos", todo.id], data);
+			queryClient.setQueryData(["todos"], (old: Todo[]) => old.map((t) => t.id === todo.id ? data : t));
 			toaster.create({
 				title: "Todo edited!",
 				type: "success",

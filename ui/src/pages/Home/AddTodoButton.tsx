@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/App";
-import { toaster } from "./ui/toaster";
+import { toaster } from "@/components/ui/toaster";
 import { Button } from "@chakra-ui/react";
 import TodoModal from "./TodoModal";
 import React from "react";
-import { Todo } from "./TodoItem";
+import Todo from "@/types/Todo";
 
 const AddTodoButton = () => {
 
