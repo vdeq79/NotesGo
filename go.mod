@@ -3,8 +3,13 @@ module github.com/vdeq79/NotesGo
 go 1.23.3
 
 require (
+	github.com/gofiber/fiber/v3 v3.0.0-beta.3
+	gorm.io/driver/postgres v1.5.11
+	gorm.io/gorm v1.25.12
+)
+
+require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
-	github.com/gofiber/fiber/v3 v3.0.0-beta.3 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.7 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -23,6 +28,4 @@ require (
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
-	gorm.io/driver/postgres v1.5.11 // indirect
-	gorm.io/gorm v1.25.12 // indirect
 )
