@@ -82,7 +82,7 @@ const TodoItem = ({todo} : { todo: Todo}) => {
 				<Card.Title>
 					<Flex flex={1}>
 						<Text color={todo.completed ? "green.400" : "yellow.400"} fontSize={"xl"} textDecoration={todo.completed ? "line-through" : "none"}>
-							{todo.identifier}
+							{todo.title}
 						</Text>
 						
 						<Flex ml={"auto"} alignItems={"center"}>

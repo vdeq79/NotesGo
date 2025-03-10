@@ -12,13 +12,13 @@ const AddTodoButton = () => {
 
 	const { mutate: addTodo } = useMutation({
 		mutationKey: ["addTodo"],
-		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
+		mutationFn: async ({title, description}: {title: string, description: string}) => {
 			try {
 
 				const res = await fetch(BASE_URL + `/todos`, {
 					method: "POST",
 					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify({identifier: identifier, description: description})
+					body: JSON.stringify({title: title, description: description})
 				});
 				const data = await res.json();
 				if (!res.ok) {
@@ -42,9 +42,9 @@ const AddTodoButton = () => {
 
 
 
-	function handleFormSubmit(e: React.FormEvent<HTMLElement>, identifier: string, description: string){
+	function handleFormSubmit(e: React.FormEvent<HTMLElement>, title: string, description: string){
 		e.preventDefault();
-		addTodo({identifier, description});
+		addTodo({title, description});
 	}
 
 

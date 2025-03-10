@@ -11,9 +11,9 @@ const EditTodoButton = ( todo: Todo, queryClient: QueryClient ) => {
 
 	const { mutate: editTodo, isPending: isEditing } = useMutation({
 		mutationKey: ["editTodo"],
-		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
+		mutationFn: async ({title, description}: {title: string, description: string}) => {
 			try {
-				todo.identifier = identifier;
+				todo.title = title;
 				todo.description = description;
 
 				const res = await fetch(BASE_URL + `/todos/${todo.id}`, {
@@ -43,9 +43,9 @@ const EditTodoButton = ( todo: Todo, queryClient: QueryClient ) => {
 
 
 
-	function handleFormSubmit(e: React.FormEvent<HTMLElement>, identifier: string, description: string){
+	function handleFormSubmit(e: React.FormEvent<HTMLElement>, title: string, description: string){
 		e.preventDefault();
-		editTodo({identifier, description});
+		editTodo({title, description});
 	}
 
 
@@ -77,7 +77,7 @@ const EditTodoButton = ( todo: Todo, queryClient: QueryClient ) => {
 			props: {
 				modelTrigger: modelTrigger,
 				initialDescription: todo.description,
-				initialIdentifier: todo.identifier,
+				initialTitle: todo.title,
 				saveButton: saveButton,
 				handleFormSubmit: handleFormSubmit
 			}

@@ -13,7 +13,7 @@ import (
 type Todo struct {
 	Id          uint   `gorm:"PrimaryKey" json:"id"`
 	Completed   bool   `gorm:"default:false" json:"completed"`
-	Identifier  string `gorm:"not null" json:"identifier"`
+	Title       string `gorm:"not null" json:"title"`
 	Description string `json:"description"`
 }
 
@@ -27,10 +27,6 @@ func main() {
 	}
 
 	fmt.Println("Connected to database")
-
-	db.AutoMigrate(&Todo{})
-
-	fmt.Println("Database migrated")
 
 	app := fiber.New()
 
@@ -59,7 +55,7 @@ func main() {
 	app.Post("/api/todos", func(c fiber.Ctx) error {
 
 		todoInfo := struct {
-			Identifier  string `json:"identifier"`
+			Title       string `json:"title"`
 			Description string `json:"description"`
 		}{}
 
@@ -68,7 +64,7 @@ func main() {
 		}
 
 		todo := Todo{
-			Identifier:  todoInfo.Identifier,
+			Title:       todoInfo.Title,
 			Description: todoInfo.Description,
 		}
 
@@ -108,7 +104,7 @@ func main() {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		todo.Identifier = updatedTodo.Identifier
+		todo.Title = updatedTodo.Title
 		todo.Description = updatedTodo.Description
 
 		db.Save(&todo)

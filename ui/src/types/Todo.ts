@@ -1,6 +1,6 @@
 type Todo = {
 	id: number;
-	identifier: string;
+	title: string;
 	description: string;
 	completed: boolean;
 };

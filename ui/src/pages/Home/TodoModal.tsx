@@ -15,9 +15,9 @@ import React, { useState } from "react";
 interface TodoModalProps {
   modelTrigger:  () => React.JSX.Element;
   saveButton: () => React.JSX.Element;
-  initialIdentifier?: string;
+  initialTitle?: string;
   initialDescription?: string;
-  handleFormSubmit: (e: React.FormEvent<HTMLElement>, identifier: any, description: any) => void
+  handleFormSubmit: (e: React.FormEvent<HTMLElement>, title: any, description: any) => void
 }
 
 
@@ -25,10 +25,10 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 
 	const [open, setOpen] = useState(false);
 
-	const initialTodoInfo = {identifier: props.initialIdentifier ?? "", description: props.initialDescription ?? ""};
+	const initialTodoInfo = {title: props.initialTitle ?? "", description: props.initialDescription ?? ""};
 
-	const [todoInfo, setTodoInfo] = React.useState({
-		identifier: initialTodoInfo.identifier, 
+	const [todoInfo, setTodoInfo] = useState({
+		title: initialTodoInfo.title, 
 		description: initialTodoInfo.description,
 	});
 
@@ -38,17 +38,17 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 			<DialogTrigger asChild>
 				{props.modelTrigger()}
 			</DialogTrigger>
-			<DialogContent as="form" onSubmit={(e) => props.handleFormSubmit(e, todoInfo.identifier, todoInfo.description)}>
+			<DialogContent as="form" onSubmit={(e) => props.handleFormSubmit(e, todoInfo.title, todoInfo.description)}>
 				<DialogHeader>
 					<DialogTitle>Todo</DialogTitle>
 				</DialogHeader>
 				<DialogBody>
 					<Field.Root required>
 						<Field.Label>
-							Identifier
+							Title
 						<Field.RequiredIndicator />
 						</Field.Label>
-						<Input value={todoInfo.identifier} onChange={(e) => setTodoInfo({...todoInfo, identifier: e.target.value})} />
+						<Input value={todoInfo.title} onChange={(e) => setTodoInfo({...todoInfo, title: e.target.value})} />
 					</Field.Root>
 
 					<Field.Root>
