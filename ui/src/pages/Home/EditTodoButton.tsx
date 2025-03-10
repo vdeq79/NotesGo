@@ -7,7 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import TodoModal from "./TodoModal";
 import Todo from "@/types/Todo";
 
-export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
+const EditTodoButton = ( todo: Todo, queryClient: QueryClient ) => {
 
 	const { mutate: editTodo, isPending: isEditing } = useMutation({
 		mutationKey: ["editTodo"],
@@ -75,7 +75,7 @@ export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 	return (
 		TodoModal({
 			props: {
-				modelTrigger: modelTrigger(),
+				modelTrigger: modelTrigger,
 				initialDescription: todo.description,
 				initialIdentifier: todo.identifier,
 				saveButton: saveButton,
@@ -84,3 +84,5 @@ export default function EditTodoButton( todo: Todo, queryClient: QueryClient ) {
 		})
 	);
 }
+
+export default EditTodoButton;

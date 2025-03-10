@@ -13,7 +13,7 @@ import {
 import React, { useState } from "react";
 
 interface TodoModalProps {
-  modelTrigger:  React.JSX.Element;
+  modelTrigger:  () => React.JSX.Element;
   saveButton: () => React.JSX.Element;
   initialIdentifier?: string;
   initialDescription?: string;
@@ -36,7 +36,7 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 	return (
 		<DialogRoot open={open} onOpenChange={(e)=> setOpen(e.open)} onExitComplete={() => setTodoInfo(initialTodoInfo)} trapFocus={false}> 
 			<DialogTrigger asChild>
-				{props.modelTrigger}
+				{props.modelTrigger()}
 			</DialogTrigger>
 			<DialogContent as="form" onSubmit={(e) => props.handleFormSubmit(e, todoInfo.identifier, todoInfo.description)}>
 				<DialogHeader>

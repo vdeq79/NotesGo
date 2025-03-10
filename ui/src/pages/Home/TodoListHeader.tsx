@@ -3,7 +3,7 @@ import { useColorModeValue } from "@/components/ui/color-mode";
 
 
 
-export default function TodoListHeader({HeaderContent}: {HeaderContent: string}) {
+const TodoListHeader = ({HeaderContent}: {HeaderContent: string}) => {
 
 	return (
 		<>
@@ -23,3 +23,5 @@ export default function TodoListHeader({HeaderContent}: {HeaderContent: string})
 		</>
 	);
 };
+
+export default TodoListHeader;

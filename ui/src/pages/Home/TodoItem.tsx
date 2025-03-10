@@ -133,4 +133,5 @@ const TodoItem = ({todo} : { todo: Todo}) => {
 	);
 };
 
+
 export default TodoItem;

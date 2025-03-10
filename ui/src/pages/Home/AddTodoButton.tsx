@@ -10,7 +10,7 @@ const AddTodoButton = () => {
 
 	const queryClient = useQueryClient();
 
-	const { mutate: addTodo} = useMutation({
+	const { mutate: addTodo } = useMutation({
 		mutationKey: ["addTodo"],
 		mutationFn: async ({identifier, description}: {identifier: string, description: string}) => {
 			try {
@@ -70,7 +70,7 @@ const AddTodoButton = () => {
 	return (
 		TodoModal({
 			props: {
-				modelTrigger: modelTrigger(),
+				modelTrigger: modelTrigger,
 				saveButton: saveButton,
 				handleFormSubmit: handleFormSubmit
 			}

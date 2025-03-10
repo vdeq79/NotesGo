@@ -3,7 +3,7 @@ import AddTodoButton from "./AddTodoButton";
 import TodoListHeader from "./TodoListHeader";
 import TodoList from "./TodoList";
 
-export default function Home() {
+const Home = () => {
 
     return(
         <>
@@ -18,3 +18,5 @@ export default function Home() {
     )
 
 }
+
+export default Home;

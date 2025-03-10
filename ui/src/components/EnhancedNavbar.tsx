@@ -13,9 +13,7 @@ import {
 import { IoMenu, IoClose } from 'react-icons/io5';
 import { ColorModeButton, useColorModeValue } from './ui/color-mode';
 
-
-
-export default function EnhancedNavbar() {
+const EnhancedNavbar = () => {
 	const { open, onToggle } = useDisclosure();
 
 	return (
@@ -76,3 +74,6 @@ export default function EnhancedNavbar() {
 		</Box>
 	);
 }
+
+
+export default EnhancedNavbar;
