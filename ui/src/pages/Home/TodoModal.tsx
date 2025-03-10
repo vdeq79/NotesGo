@@ -11,13 +11,19 @@ import {
   DialogRoot,
 } from "@/components/ui/dialog"
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 interface TodoModalProps {
   modelTrigger:  () => React.JSX.Element;
   saveButton: () => React.JSX.Element;
   initialTitle?: string;
   initialDescription?: string;
-  handleFormSubmit: (e: React.FormEvent<HTMLElement>, title: any, description: any) => void
+  handleFormSubmit: (title: any, description: any) => void
+}
+
+interface todoInfo {
+	title: string;
+	description: string;
 }
 
 
@@ -25,30 +31,38 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 
 	const [open, setOpen] = useState(false);
 
-	const initialTodoInfo = {title: props.initialTitle ?? "", description: props.initialDescription ?? ""};
-
-	const [todoInfo, setTodoInfo] = useState({
-		title: initialTodoInfo.title, 
-		description: initialTodoInfo.description,
-	});
-
+	const initialTodoInfo: todoInfo = {title: props.initialTitle ?? "", description: props.initialDescription ?? ""};
+	const {handleSubmit, reset, control, formState: {errors} } = useForm<todoInfo>();
 
 	return (
-		<DialogRoot open={open} onOpenChange={(e)=> setOpen(e.open)} onExitComplete={() => setTodoInfo(initialTodoInfo)} trapFocus={false}> 
+		<DialogRoot open={open} onOpenChange={(e)=> setOpen(e.open)} onExitComplete={() => reset({title: initialTodoInfo.title, description: initialTodoInfo.description})} trapFocus={false}> 
 			<DialogTrigger asChild>
 				{props.modelTrigger()}
 			</DialogTrigger>
-			<DialogContent as="form" onSubmit={(e) => props.handleFormSubmit(e, todoInfo.title, todoInfo.description)}>
+			<DialogContent as="form" onSubmit={handleSubmit((data) => {
+				props.handleFormSubmit(data.title, data.description); 
+				setOpen(false);
+			})}>
 				<DialogHeader>
 					<DialogTitle>Todo</DialogTitle>
 				</DialogHeader>
 				<DialogBody>
-					<Field.Root required>
+					<Field.Root required invalid={errors.title ? true : false}>
 						<Field.Label>
 							Title
 						<Field.RequiredIndicator />
 						</Field.Label>
-						<Input value={todoInfo.title} onChange={(e) => setTodoInfo({...todoInfo, title: e.target.value})} />
+						<Controller
+							name="title"
+							control={control}
+							rules={{ validate: (value) => value && value.trim().length > 0 }}
+							render={({ field }) => (
+								<Input {...field} aria-invalid={errors.title ? true : false}/>
+							)}
+							defaultValue={initialTodoInfo.title}
+							
+						/>
+						<Field.ErrorText>Title is required and cannot be empty</Field.ErrorText>
 					</Field.Root>
 
 					<Field.Root>
@@ -56,7 +70,14 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 							Description
 						<Field.RequiredIndicator />
 						</Field.Label>
-						<Textarea rows={4} value={todoInfo.description} onChange={(e) => setTodoInfo({...todoInfo, description: e.target.value})} />
+						<Controller
+							name="description"
+							control={control}
+							render={({ field }) => (
+								<Textarea rows={4} {...field} />
+							)}
+							defaultValue={initialTodoInfo.description}
+						/>
 					</Field.Root>
 				</DialogBody>
 
@@ -64,9 +85,7 @@ const TodoModal = ({props}: {props: TodoModalProps}) => {
 					<DialogActionTrigger asChild>
 						<Button variant="outline">Cancel</Button>
 					</DialogActionTrigger>					
-					<DialogActionTrigger asChild>
-						{props.saveButton()}
-					</DialogActionTrigger>
+					{props.saveButton()}
 				</DialogFooter>
 				<DialogCloseTrigger/>
 			</DialogContent>

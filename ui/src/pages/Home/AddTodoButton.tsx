@@ -3,7 +3,6 @@ import { BASE_URL } from "@/App";
 import { toaster } from "@/components/ui/toaster";
 import { Button } from "@chakra-ui/react";
 import TodoModal from "./TodoModal";
-import React from "react";
 import Todo from "@/types/Todo";
 
 const AddTodoButton = () => {
@@ -42,8 +41,7 @@ const AddTodoButton = () => {
 
 
 
-	function handleFormSubmit(e: React.FormEvent<HTMLElement>, title: string, description: string){
-		e.preventDefault();
+	function handleFormSubmit(title: string, description: string){
 		addTodo({title, description});
 	}
 

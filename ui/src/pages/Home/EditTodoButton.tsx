@@ -43,8 +43,7 @@ const EditTodoButton = ( todo: Todo, queryClient: QueryClient ) => {
 
 
 
-	function handleFormSubmit(e: React.FormEvent<HTMLElement>, title: string, description: string){
-		e.preventDefault();
+	function handleFormSubmit(title: string, description: string){
 		editTodo({title, description});
 	}
 

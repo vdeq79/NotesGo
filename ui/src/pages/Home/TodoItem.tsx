@@ -81,7 +81,7 @@ const TodoItem = ({todo} : { todo: Todo}) => {
 			<Card.Body gap={"2"}>
 				<Card.Title>
 					<Flex flex={1}>
-						<Text color={todo.completed ? "green.400" : "yellow.400"} fontSize={"xl"} textDecoration={todo.completed ? "line-through" : "none"}>
+						<Text whiteSpace={"pre-wrap"} color={todo.completed ? "green.400" : "yellow.400"} fontSize={"xl"} textDecoration={todo.completed ? "line-through" : "none"}>
 							{todo.title}
 						</Text>
 						
@@ -102,7 +102,7 @@ const TodoItem = ({todo} : { todo: Todo}) => {
 							<HStack spaceX={-2}>
 								{EditTodoButton(todo, queryClient)}
 
-								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"}>
+								<IconButton color={"green.500"} onClick={() => completeTodo()} size={"lg"} variant={"plain"} disabled={todo.completed}>
 									<Tooltip content = "Complete Todo" openDelay={200} closeDelay={200}>
 										<Box >
 											{!isCompleting && <FaCheckCircle/>}
